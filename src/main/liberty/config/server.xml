@@ -3,31 +3,31 @@
 
     <!-- Enable features -->
     <featureManager>
-        <!-- <feature>jakartaee-10.0</feature> -->
+        <feature>jakartaee-10.0</feature>
           <!-- <feature>jsp-2.3</feature> I commented this to avoid conflect with the restfulWS-3.1-->
 
         <!-- Feature for RESTful Web Services (JAX-RS 3.1) -->
         <!-- Enables support for building and deploying RESTful web services using the JAX-RS 3.1 specification -->
-        <feature>restfulWS-3.1</feature>
+        <!-- <feature>restfulWS-3.1</feature> -->
          <!-- 
         Enable JSON-B (Java API for JSON Binding) support by adding the jsonb-3.0 feature.
         This feature provides functionality for serializing and deserializing Java objects to/from JSON format.
         By including this feature in the server configuration, Open Liberty ensures that the necessary components
         for JSON processing are available at the server level, allowing applications to seamlessly work with JSON data.
          -->
-        <feature>jsonb-3.0</feature>
+        <!-- <feature>jsonb-3.0</feature>
         <feature>cdi-4.0</feature>
-        <feature>jdbc-4.2</feature>
+        <feature>jdbc-4.2</feature> -->
         
     </featureManager>
 
     <library id="jdbcLib">
         <fileset dir="jdbc" includes="*.jar"/>
     </library>
-    <dataSource jndiName="jdbc/testAuthDatabase">
+    <dataSource jndiName="jdbc/g_note">
         <jdbcDriver libraryRef="jdbcLib"/>
         <properties serverName="localhost" portNumber="3306"
-                    databaseName="testAuthDatabase"
+                    databaseName="g_note"
                     user="root"
                     password="admin"/>
         <connectionManager maxPoolSize="10" />
@@ -48,11 +48,11 @@
         generate an encoded password using bin/securityUtility encode and add it in the password attribute of the user element.
         Then uncomment the user element. -->
    
-        <!-- <basicRegistry id="basic" realm="BasicRealm"> -->
+        <basicRegistry id="basic" realm="BasicRealm">
         <!--
         <user name="yourUserName" password="" />
         -->
-    <!-- </basicRegistry> -->
+    </basicRegistry>
 
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <httpEndpoint id="defaultHttpEndpoint"
@@ -66,5 +66,5 @@
     <webApplication contextRoot="/g-note" location="g-note.war" />
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
-    <!-- <ssl id="defaultSSLConfig" trustDefaultCerts="true" /> -->
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 </server>

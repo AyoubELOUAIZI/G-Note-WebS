@@ -1,6 +1,6 @@
 -- Create the g_note database
 CREATE DATABASE IF NOT EXISTS g_note;
-
+use g_note;
 -- Create the user table
 CREATE TABLE IF NOT EXISTS user (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -21,3 +21,10 @@ CREATE TABLE IF NOT EXISTS note (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (ownerId) REFERENCES user(id)
 );
+
+-- Inserting sample data into the user table
+INSERT INTO user (email, password, isAdmin, isSubscribed)
+VALUES 
+    ('user1@example.com', 'password1', false, true),
+    ('user2@example.com', 'password2', false, false),
+    ('admin@example.com', 'adminpassword', true, true);

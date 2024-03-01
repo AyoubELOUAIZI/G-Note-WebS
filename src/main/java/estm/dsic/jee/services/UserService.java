@@ -1,5 +1,12 @@
 package estm.dsic.jee.services;
 
-public class UserService {
-    
+import estm.dsic.jee.models.User;
+
+public interface UserService {
+    User getUserById(int id);
+    User getUserByUsername(String username);
+    User getUserByEmail(String email);
+    boolean registerUser(User user);
+    User authenticateUser(String email, String password);
 }
+
