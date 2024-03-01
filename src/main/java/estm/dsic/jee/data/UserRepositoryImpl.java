@@ -80,11 +80,15 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
 
     @Override
     public boolean save(User user) {
-        String sql = "INSERT INTO users (email, username, password) VALUES (?, ?, ?)";
+        System.out.println("\n\n\nuser want to signup : "+user);
+        String sql = "INSERT INTO user (email, password, isAdmin, isSubscribed) VALUES (?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getEmail());
-            statement.setString(3, user.getPassword());
+            statement.setString(2, user.getPassword());
+            statement.setBoolean(3, user.isAdmin());
+            statement.setBoolean(4, user.isSubscribed());
+            
             int rowsInserted = statement.executeUpdate();
             return rowsInserted > 0; // Return true if at least one row was inserted
         } catch (SQLException e) {
@@ -93,6 +97,7 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
             return false; // Return false if an exception occurred
         }
     }
+    
 
     @Override
     public void update(User user) {
