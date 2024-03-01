@@ -8,6 +8,6 @@ public interface UserRepository {
     User findByEmailAndPassword(String email, String password);
     User findByEmail(String email);
     boolean save(User user);
-    void update(User user);
+    boolean update(User user);
     void delete(User user);
 }

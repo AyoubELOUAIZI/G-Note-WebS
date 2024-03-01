@@ -8,5 +8,6 @@ public interface UserService {
     User getUserByEmail(String email);
     boolean registerUser(User user);
     User authenticateUser(String email, String password);
+    boolean markUserAsSubscribed(int userId);
 }
 

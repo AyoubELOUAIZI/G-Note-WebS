@@ -55,4 +55,11 @@ public class User {
     public void setSubscribed(boolean isSubscribed) {
         this.isSubscribed = isSubscribed;
     }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", email=" + email + ", password=" + password + ", isAdmin=" + isAdmin
+                + ", isSubscribed=" + isSubscribed + "]";
+    }
+    
 }

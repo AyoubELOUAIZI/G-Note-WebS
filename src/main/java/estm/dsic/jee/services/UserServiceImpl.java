@@ -41,4 +41,15 @@ public class UserServiceImpl implements UserService, Serializable {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
+    @Override
+    public boolean markUserAsSubscribed(int userId) {
+        User user = userRepository.findById(userId);
+        System.out.println("\n\n\nin update user found from user services in  markUserAsSubscribed...    "+ user);
+        if (user != null) {
+            user.setSubscribed(true);
+            return userRepository.update(user); // Return the result of the update operation
+        }
+        return false;
+    }
+    
 }
