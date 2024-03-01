@@ -1,0 +1,23 @@
+-- Create the g_note database
+CREATE DATABASE IF NOT EXISTS g_note;
+
+-- Create the user table
+CREATE TABLE IF NOT EXISTS user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(25) NOT NULL,
+    password VARCHAR(25) NOT NULL,
+    isAdmin BOOLEAN DEFAULT FALSE,
+    isSubscribed BOOLEAN DEFAULT FALSE
+);
+
+
+-- Create the note table
+CREATE TABLE IF NOT EXISTS note (
+    idNote INT AUTO_INCREMENT PRIMARY KEY,
+    ownerId INT,
+    Subject VARCHAR(255),
+    Body TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (ownerId) REFERENCES user(id)
+);
