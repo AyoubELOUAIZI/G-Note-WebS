@@ -4,21 +4,6 @@
     <!-- Enable features -->
     <featureManager>
         <feature>jakartaee-10.0</feature>
-          <!-- <feature>jsp-2.3</feature> I commented this to avoid conflect with the restfulWS-3.1-->
-
-        <!-- Feature for RESTful Web Services (JAX-RS 3.1) -->
-        <!-- Enables support for building and deploying RESTful web services using the JAX-RS 3.1 specification -->
-        <!-- <feature>restfulWS-3.1</feature> -->
-         <!-- 
-        Enable JSON-B (Java API for JSON Binding) support by adding the jsonb-3.0 feature.
-        This feature provides functionality for serializing and deserializing Java objects to/from JSON format.
-        By including this feature in the server configuration, Open Liberty ensures that the necessary components
-        for JSON processing are available at the server level, allowing applications to seamlessly work with JSON data.
-         -->
-        <!-- <feature>jsonb-3.0</feature>
-        <feature>cdi-4.0</feature>
-        <feature>jdbc-4.2</feature> -->
-        
     </featureManager>
 
     <library id="jdbcLib">
