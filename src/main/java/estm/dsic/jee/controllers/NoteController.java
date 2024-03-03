@@ -25,9 +25,9 @@ public class NoteController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNoteById(@PathParam("id") int id) {
-        Note note = noteService.getNoteById(id);
-        if (note != null) {
-            return Response.ok(note).build();
+        List<Note> notes = noteService.getNotesByOwnerId(id);
+        if (notes != null) {
+            return Response.ok(notes).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

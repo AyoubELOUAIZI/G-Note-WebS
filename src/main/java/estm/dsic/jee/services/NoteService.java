@@ -8,8 +8,8 @@ public interface NoteService {
     // Retrieve all notes
     List<Note> getAllNotes();
 
-    // Retrieve a note by its ID
-    Note getNoteById(int id);
+    // Retrieve all notes for a specific owner
+    List<Note> getNotesByOwnerId(int ownerId);
 
     // Save a new note
     boolean save(Note note);

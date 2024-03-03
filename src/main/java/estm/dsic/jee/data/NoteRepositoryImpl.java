@@ -43,13 +43,14 @@ public class NoteRepositoryImpl implements NoteRepository, Serializable {
     }
 
     @Override
-    public Note getNoteById(int id) {
-        String sql = "SELECT * FROM note WHERE idNote = ?";
+    public List<Note> getNotesByOwnerId(int ownerId) {
+        List<Note> notes = new ArrayList<>();
+        String sql = "SELECT * FROM note WHERE ownerId = ?";
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
+            statement.setInt(1, ownerId);
             try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     Note note = new Note();
                     note.setIdNote(resultSet.getInt("idNote"));
                     note.setOwnerId(resultSet.getInt("ownerId"));
@@ -57,13 +58,13 @@ public class NoteRepositoryImpl implements NoteRepository, Serializable {
                     note.setBody(resultSet.getString("Body"));
                     note.setCreatedAt(resultSet.getTimestamp("createdAt"));
                     note.setUpdatedAt(resultSet.getTimestamp("updatedAt"));
-                    return note;
+                    notes.add(note);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return notes;
     }
 
     @Override
