@@ -6,6 +6,7 @@ public class User {
     private String password;
     private boolean isAdmin;
     private boolean isSubscribed;
+    private String fullName;
 
     // Constructors
     public User() {}
@@ -60,6 +61,14 @@ public class User {
     public String toString() {
         return "User [id=" + id + ", email=" + email + ", password=" + password + ", isAdmin=" + isAdmin
                 + ", isSubscribed=" + isSubscribed + "]";
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
     
 }

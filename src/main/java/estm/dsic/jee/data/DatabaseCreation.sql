@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS user (
     email VARCHAR(25) NOT NULL,
     password VARCHAR(25) NOT NULL,
     isAdmin BOOLEAN DEFAULT FALSE,
-    isSubscribed BOOLEAN DEFAULT FALSE
+    isSubscribed BOOLEAN DEFAULT FALSE,
+    fullName VARCHAR(50) NOT NULL
 );
 
 

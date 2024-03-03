@@ -65,6 +65,7 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
                     user.setPassword(resultSet.getString("password"));
                     user.setAdmin(resultSet.getBoolean("isAdmin"));
                     user.setSubscribed(resultSet.getBoolean("isSubscribed"));
+                    user.setFullName(resultSet.getString("fullName"));
                     // Populate other user fields if needed
                     System.out.println("\n\n\nuser in the repository \n"+user);
                     return user;

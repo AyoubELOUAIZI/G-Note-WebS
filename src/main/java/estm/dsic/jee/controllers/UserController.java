@@ -29,6 +29,8 @@ public class UserController {
             // Authentication successful
             // SignInResponse response = new SignInResponse(authenticatedUser, "User signed in successfully");
             // System.out.println("response: " + response);
+           
+            System.out.println(Response.ok(authenticatedUser).build());
             return Response.ok(authenticatedUser).build();
         } else {
             // Authentication failed
