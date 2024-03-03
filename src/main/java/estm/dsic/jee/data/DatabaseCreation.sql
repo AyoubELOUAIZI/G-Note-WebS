@@ -29,3 +29,13 @@ VALUES
     ('user1@example.com', 'password1', false, true),
     ('user2@example.com', 'password2', false, false),
     ('admin@example.com', 'adminpassword', true, true);
+
+-- Inserting sample data into the note table
+INSERT INTO note (ownerId, Subject, Body)
+VALUES 
+    (1, 'Meeting', 'Meeting scheduled for tomorrow at 10 AM.'),
+    (2, 'Shopping list', 'Need to buy groceries and household items.'),
+    (1, 'Project deadline', 'Reminder: Project deadline is next week.'),
+    (3, 'Travel plans', 'Planning a trip to Europe next month.'),
+    (2, 'Birthday party', 'Inviting friends over for a birthday party.'),
+    (1, 'Study group', 'Group study session at the library on Saturday.');
