@@ -36,12 +36,24 @@ public class NoteController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createNote(Note note) {
-         System.out.println("Note to ADD:\n" + note);
-        boolean success = noteService.save(note);
-        if (success) {
-            return Response.status(Response.Status.CREATED).build();
-        } else {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        try {
+            System.out.println("Note to add:\n" + note);
+
+            boolean success = noteService.save(note);
+            if (success) {
+                return Response.status(Response.Status.CREATED)
+                        .entity("Note created successfully")
+                        .build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity("Failed to create note")
+                        .build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred while processing the request")
+                    .build();
         }
     }
 
