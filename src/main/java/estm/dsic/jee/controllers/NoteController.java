@@ -36,6 +36,7 @@ public class NoteController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createNote(Note note) {
+         System.out.println("Note to ADD:\n" + note);
         boolean success = noteService.save(note);
         if (success) {
             return Response.status(Response.Status.CREATED).build();
@@ -45,15 +46,28 @@ public class NoteController {
     }
 
     @PUT
-    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateNote(@PathParam("id") int id, Note note) {
-        note.setIdNote(id); // Ensure correct ID is set
-        boolean success = noteService.update(note);
-        if (success) {
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+    public Response updateNote(Note note) {
+        try {
+            // Log the note being updated
+            // System.out.println("Note to update:\n" + note);
+
+            // Update the note
+            boolean success = noteService.update(note);
+
+            // Check if the update was successful
+            if (success) {
+                // Return the updated note in the response body
+                return Response.ok(note).build();
+            } else {
+                // Return a 404 Not Found response if the note was not found
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            // Log any exceptions that occur during the update operation
+            e.printStackTrace();
+            // Return a 500 Internal Server Error response
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -68,4 +82,3 @@ public class NoteController {
         }
     }
 }
-

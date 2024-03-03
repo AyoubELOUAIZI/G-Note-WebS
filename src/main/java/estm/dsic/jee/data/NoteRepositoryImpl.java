@@ -85,13 +85,12 @@ public class NoteRepositoryImpl implements NoteRepository, Serializable {
 
     @Override
     public boolean update(Note note) {
-        String sql = "UPDATE note SET ownerId = ?, Subject = ?, Body = ?, updatedAt = CURRENT_TIMESTAMP WHERE idNote = ?";
+        String sql = "UPDATE note SET Subject = ?, Body = ? WHERE idNote = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, note.getOwnerId());
-            statement.setString(2, note.getSubject());
-            statement.setString(3, note.getBody());
-            statement.setInt(4, note.getIdNote());
+            statement.setString(1, note.getSubject());
+            statement.setString(2, note.getBody());
+            statement.setInt(3, note.getIdNote());
             int rowsUpdated = statement.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException e) {

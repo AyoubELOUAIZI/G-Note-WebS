@@ -13,6 +13,12 @@ public class Note {
     // Constructors
     public Note() {}
 
+    @Override
+    public String toString() {
+        return "Note [idNote=" + idNote + ", ownerId=" + ownerId + ", subject=" + subject + ", body=" + body
+                + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+    }
+
     public Note(int ownerId, String subject, String body) {
         this.ownerId = ownerId;
         this.subject = subject;
