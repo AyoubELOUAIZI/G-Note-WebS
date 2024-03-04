@@ -16,29 +16,29 @@ public class UserController {
 
     @Inject
     UserService userService;
-
+    
     @POST
     @Path("/signin")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON) // Specify JSON as the response type
+    @Produces(MediaType.APPLICATION_JSON)
     public Response signInUser(User user) {
         System.out.println("\n\nthe function signInUser is called \n" + user);
         // Authenticate the user
         User authenticatedUser = userService.authenticateUser(user.getEmail(), user.getPassword());
-        System.out.println("authenticated user: " + authenticatedUser);
-
-        if (authenticatedUser != null) {
-            // Authentication successful
-            // SignInResponse response = new SignInResponse(authenticatedUser, "User signed
-            // in successfully");
-            // System.out.println("response: " + response);
-
-            System.out.println(Response.ok(authenticatedUser).build());
+        System.out.println("authenticatedUser");
+        System.out.println(authenticatedUser);
+        if (authenticatedUser != null && authenticatedUser.isSubscribed()) {
+            // Authentication successful and user is subscribed
             return Response.ok(authenticatedUser).build();
+        } else if (authenticatedUser != null && !authenticatedUser.isSubscribed()) {
+            // User is not subscribed
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(ResponseMessages.ACCOUNT_NOT_VERIFIED)
+                    .build();
         } else {
             // Authentication failed
             return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(ResponseMessages.SIGN_IN_FAILED)
+                    .entity(ResponseMessages.INCORRECT_CREDENTIALS)
                     .build();
         }
     }
@@ -104,12 +104,11 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public void logoutUser(User user) {
         // Implementation for user logout
-        //maybe just remove the http only cokie and set the logout cokie in browser
+        // maybe just remove the http only cokie and set the logout cokie in browser
     }
 
     // Inside UserController class
     @GET
-    // @Path("/getAll")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers() {
         List<User> users = userService.getAllUsers();
@@ -125,7 +124,7 @@ public class UserController {
     @DELETE
     @Path("/{userId}")
     public Response deleteUserById(@PathParam("userId") int userId) {
-        System.out.println("\n\n\nuser id to delete "+userId);
+        System.out.println("\n\n\nuser id to delete " + userId);
         boolean success = userService.deleteUserById(userId);
         if (success) {
             return Response.ok(ResponseMessages.USER_DELETED_SUCCESSFULLY).build();

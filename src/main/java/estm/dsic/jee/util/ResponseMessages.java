@@ -21,5 +21,7 @@ public class ResponseMessages {
     public static final String NO_USERS_FOUND = "No users found.";
     public static final String USER_NOT_FOUND = "User not found.";
 
+    public static final String INCORRECT_CREDENTIALS = "Incorrect email or password";
+    public static final String ACCOUNT_NOT_VERIFIED = "Your account is not verified yet. Please try again later or contact the admin.";
 
 }
