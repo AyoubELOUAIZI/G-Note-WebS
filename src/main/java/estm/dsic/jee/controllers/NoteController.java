@@ -86,11 +86,18 @@ public class NoteController {
     @DELETE
     @Path("/{id}")
     public Response deleteNoteById(@PathParam("id") int id) {
-        boolean success = noteService.delete(id);
-        if (success) {
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        try {
+            boolean success = noteService.delete(id);
+            if (success) {
+                return Response.ok().entity("Note with id " + id + " deleted successfully").build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Note with id " + id + " not found").build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred while processing the request").build();
         }
     }
+
 }
