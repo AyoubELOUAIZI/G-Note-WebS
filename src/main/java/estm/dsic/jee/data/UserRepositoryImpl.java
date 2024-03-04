@@ -105,26 +105,6 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
     }
 
     @Override
-    public boolean save(User user) {
-        System.out.println("\n\n\nuser want to signup : " + user);
-        String sql = "INSERT INTO user (email, password, isAdmin, isSubscribed) VALUES (?, ?, ?, ?)";
-        try (Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, user.getEmail());
-            statement.setString(2, user.getPassword());
-            statement.setBoolean(3, user.isAdmin());
-            statement.setBoolean(4, user.isSubscribed());
-
-            int rowsInserted = statement.executeUpdate();
-            return rowsInserted > 0; // Return true if at least one row was inserted
-        } catch (SQLException e) {
-            // Handle any SQL exceptions (e.g., logging, throwing custom exception)
-            e.printStackTrace();
-            return false; // Return false if an exception occurred
-        }
-    }
-
-    @Override
     public boolean update(User user) {
         System.out.println("\n\n\nuser update" + user);
         // Implementation to update user information in the database
@@ -219,8 +199,8 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getPassword());
-            statement.setBoolean(3, user.isAdmin());
-            statement.setBoolean(4, user.isSubscribed());
+            statement.setBoolean(3, false);
+            statement.setBoolean(4, false);
             statement.setString(5, user.getFullName());
             int rowsInserted = statement.executeUpdate();
             return rowsInserted > 0;

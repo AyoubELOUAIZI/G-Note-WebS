@@ -24,6 +24,4 @@ public interface UserService {
 
     boolean updateUserById(User user);
 
-    boolean addUser(User user);
-
 }

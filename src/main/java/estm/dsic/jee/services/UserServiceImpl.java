@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService, Serializable {
 
     @Override
     public boolean registerUser(User user) {
-        return userRepository.save(user);
+        return userRepository.addUser(user);
     }
 
     @Override
@@ -67,11 +67,6 @@ public class UserServiceImpl implements UserService, Serializable {
     @Override
     public boolean updateUserById(User user) {
         return userRepository.updateUserById(user);
-    }
-
-    @Override
-    public boolean addUser(User user) {
-        return userRepository.addUser(user);
     }
 
 }

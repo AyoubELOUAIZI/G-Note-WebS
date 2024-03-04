@@ -13,8 +13,6 @@ public interface UserRepository {
 
     User findByEmail(String email);
 
-    boolean save(User user);
-
     boolean update(User user);
 
     void delete(User user);

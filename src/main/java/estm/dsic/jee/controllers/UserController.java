@@ -153,7 +153,7 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addUser(User user) {
-        boolean success = userService.addUser(user);
+        boolean success = userService.registerUser(user);
         if (success) {
             return Response.ok(ResponseMessages.USER_ADDED_SUCCESSFULLY).build();
         } else {
