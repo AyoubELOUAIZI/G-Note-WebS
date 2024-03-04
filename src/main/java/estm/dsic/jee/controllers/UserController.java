@@ -125,6 +125,7 @@ public class UserController {
     @DELETE
     @Path("/{userId}")
     public Response deleteUserById(@PathParam("userId") int userId) {
+        System.out.println("\n\n\nuser id to delete "+userId);
         boolean success = userService.deleteUserById(userId);
         if (success) {
             return Response.ok(ResponseMessages.USER_DELETED_SUCCESSFULLY).build();
@@ -136,10 +137,9 @@ public class UserController {
     }
 
     @PUT
-    @Path("/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateUserById(@PathParam("userId") int userId, User user) {
-        boolean success = userService.updateUserById(userId, user);
+    public Response updateUserById(User user) {
+        boolean success = userService.updateUserById(user);
         if (success) {
             return Response.ok(ResponseMessages.USER_UPDATED_SUCCESSFULLY).build();
         } else {

@@ -22,7 +22,7 @@ public interface UserService {
 
     boolean deleteUserById(int userId);
 
-    boolean updateUserById(int userId, User user);
+    boolean updateUserById(User user);
 
     boolean addUser(User user);
 

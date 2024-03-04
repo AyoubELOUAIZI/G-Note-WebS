@@ -193,7 +193,7 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
     }
 
     @Override
-    public boolean updateUserById(int userId, User user) {
+    public boolean updateUserById(User user) {
         String sql = "UPDATE user SET email = ?, password = ?, isAdmin = ?, isSubscribed = ?, fullName = ? WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -202,7 +202,7 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
             statement.setBoolean(3, user.isAdmin());
             statement.setBoolean(4, user.isSubscribed());
             statement.setString(5, user.getFullName());
-            statement.setInt(6, userId);
+            statement.setInt(6, user.getId());
             int rowsAffected = statement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {

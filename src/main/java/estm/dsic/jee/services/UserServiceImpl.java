@@ -65,8 +65,8 @@ public class UserServiceImpl implements UserService, Serializable {
     }
 
     @Override
-    public boolean updateUserById(int userId, User user) {
-        return userRepository.updateUserById(userId, user);
+    public boolean updateUserById(User user) {
+        return userRepository.updateUserById(user);
     }
 
     @Override
