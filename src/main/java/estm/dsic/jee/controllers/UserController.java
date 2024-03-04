@@ -1,5 +1,7 @@
 package estm.dsic.jee.controllers;
 
+import java.util.List;
+
 import estm.dsic.jee.models.User;
 import estm.dsic.jee.services.UserService;
 import estm.dsic.jee.util.ResponseMessages;
@@ -27,9 +29,10 @@ public class UserController {
 
         if (authenticatedUser != null) {
             // Authentication successful
-            // SignInResponse response = new SignInResponse(authenticatedUser, "User signed in successfully");
+            // SignInResponse response = new SignInResponse(authenticatedUser, "User signed
+            // in successfully");
             // System.out.println("response: " + response);
-           
+
             System.out.println(Response.ok(authenticatedUser).build());
             return Response.ok(authenticatedUser).build();
         } else {
@@ -73,7 +76,6 @@ public class UserController {
         }
     }
 
-
     class SignInResponse {
         @JsonbProperty("user")
         private User user;
@@ -102,5 +104,63 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public void logoutUser(User user) {
         // Implementation for user logout
+        //maybe just remove the http only cokie and set the logout cokie in browser
+    }
+
+    // Inside UserController class
+    @GET
+    // @Path("/getAll")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        if (users != null && !users.isEmpty()) {
+            return Response.ok(users).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ResponseMessages.NO_USERS_FOUND)
+                    .build();
+        }
+    }
+
+    @DELETE
+    @Path("/{userId}")
+    public Response deleteUserById(@PathParam("userId") int userId) {
+        boolean success = userService.deleteUserById(userId);
+        if (success) {
+            return Response.ok(ResponseMessages.USER_DELETED_SUCCESSFULLY).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ResponseMessages.USER_NOT_FOUND)
+                    .build();
+        }
+    }
+
+    @PUT
+    @Path("/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateUserById(@PathParam("userId") int userId, User user) {
+        boolean success = userService.updateUserById(userId, user);
+        if (success) {
+            return Response.ok(ResponseMessages.USER_UPDATED_SUCCESSFULLY).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ResponseMessages.USER_UPDATE_FAILED)
+                    .build();
+        }
+    }
+
+    @POST
+    @Path("/add")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addUser(User user) {
+        boolean success = userService.addUser(user);
+        if (success) {
+            return Response.ok(ResponseMessages.USER_ADDED_SUCCESSFULLY).build();
+        } else {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseMessages.USER_ADD_FAILED)
+                    .build();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package estm.dsic.jee.models;
 
+import java.sql.Timestamp;
+
 public class User {
     private int id;
     private String email;
@@ -7,6 +9,7 @@ public class User {
     private boolean isAdmin;
     private boolean isSubscribed;
     private String fullName;
+    private Timestamp createdAt;
 
     // Constructors
     public User() {}
@@ -57,18 +60,26 @@ public class User {
         this.isSubscribed = isSubscribed;
     }
 
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", email=" + email + ", password=" + password + ", isAdmin=" + isAdmin
-                + ", isSubscribed=" + isSubscribed + "]";
-    }
-
     public String getFullName() {
         return fullName;
     }
 
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", email=" + email + ", password=" + password + ", isAdmin=" + isAdmin
+                + ", isSubscribed=" + isSubscribed + ", fullName=" + fullName + ", createdAt=" + createdAt + "]";
+    }
+
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
     
 }

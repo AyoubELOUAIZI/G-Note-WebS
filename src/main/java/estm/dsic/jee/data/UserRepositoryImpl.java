@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 
@@ -67,7 +70,7 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
                     user.setSubscribed(resultSet.getBoolean("isSubscribed"));
                     user.setFullName(resultSet.getString("fullName"));
                     // Populate other user fields if needed
-                    System.out.println("\n\n\nuser in the repository \n"+user);
+                    System.out.println("\n\n\nuser in the repository \n" + user);
                     return user;
                 }
             }
@@ -142,5 +145,89 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
     @Override
     public void delete(User user) {
         // Implementation to delete a user from the database
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM user";
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    User user = new User();
+                    user.setId(resultSet.getInt("id"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setAdmin(resultSet.getBoolean("isAdmin"));
+                    user.setSubscribed(resultSet.getBoolean("isSubscribed"));
+                    user.setFullName(resultSet.getString("fullName"));
+                    user.setCreatedAt(resultSet.getTimestamp("createdAt"));
+
+                    // Populate other user fields if needed
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any SQL exceptions (e.g., logging, throwing custom exception)
+        }
+        System.out.println("list of users");
+        System.out.println(users);
+        return users;
+    }
+
+    @Override
+    public boolean deleteUserById(int userId) {
+        String sql = "DELETE FROM user WHERE id = ?";
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any SQL exceptions (e.g., logging, throwing custom exception)
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateUserById(int userId, User user) {
+        String sql = "UPDATE user SET email = ?, password = ?, isAdmin = ?, isSubscribed = ?, fullName = ? WHERE id = ?";
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getPassword());
+            statement.setBoolean(3, user.isAdmin());
+            statement.setBoolean(4, user.isSubscribed());
+            statement.setString(5, user.getFullName());
+            statement.setInt(6, userId);
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any SQL exceptions (e.g., logging, throwing custom exception)
+            return false;
+        }
+    }
+
+    @Override
+    public boolean addUser(User user) {
+        String sql = "INSERT INTO user (email, password, isAdmin, isSubscribed, fullName) VALUES (?, ?, ?, ?, ?)";
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getPassword());
+            statement.setBoolean(3, user.isAdmin());
+            statement.setBoolean(4, user.isSubscribed());
+            statement.setString(5, user.getFullName());
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any SQL exceptions (e.g., logging, throwing custom exception)
+            return false;
+        }
     }
 }

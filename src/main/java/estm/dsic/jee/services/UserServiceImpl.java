@@ -1,6 +1,7 @@
 package estm.dsic.jee.services;
 
 import java.io.Serializable;
+import java.util.List;
 
 import estm.dsic.jee.data.UserRepository;
 import estm.dsic.jee.models.User;
@@ -44,12 +45,33 @@ public class UserServiceImpl implements UserService, Serializable {
     @Override
     public boolean markUserAsSubscribed(int userId) {
         User user = userRepository.findById(userId);
-        System.out.println("\n\n\nin update user found from user services in  markUserAsSubscribed...    "+ user);
+        System.out.println("\n\n\nin update user found from user services in  markUserAsSubscribed...    " + user);
         if (user != null) {
             user.setSubscribed(true);
             return userRepository.update(user); // Return the result of the update operation
         }
         return false;
     }
-    
+
+    // Inside UserServiceImpl class
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.getAllUsers();
+    }
+
+    @Override
+    public boolean deleteUserById(int userId) {
+        return userRepository.deleteUserById(userId);
+    }
+
+    @Override
+    public boolean updateUserById(int userId, User user) {
+        return userRepository.updateUserById(userId, user);
+    }
+
+    @Override
+    public boolean addUser(User user) {
+        return userRepository.addUser(user);
+    }
+
 }

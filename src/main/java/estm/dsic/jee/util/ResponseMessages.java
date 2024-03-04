@@ -12,4 +12,14 @@ public class ResponseMessages {
 
     public static final String USER_NOT_SUBSCRIBED = "User not found or unable to subscribe";
     public static final String USER_SUBSCRIBED = "User subscribed successfully";
+
+    public static final String USER_ADD_FAILED = "Failed to add user. Please try again.";
+    public static final String USER_ADDED_SUCCESSFULLY = "User added successfully.";
+    public static final String USER_UPDATE_FAILED = "Failed to update user. Please try again.";
+    public static final String USER_UPDATED_SUCCESSFULLY = "User updated successfully.";
+    public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully.";
+    public static final String NO_USERS_FOUND = "No users found.";
+    public static final String USER_NOT_FOUND = "User not found.";
+
+
 }
