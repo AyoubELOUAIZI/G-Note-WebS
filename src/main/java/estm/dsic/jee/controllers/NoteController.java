@@ -118,7 +118,7 @@ public class NoteController {
                 return Response.ok(notes).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity("No notes found for the given keyword")
+                        .entity("No notes found for the given keyword : '"+keyword+"'")
                         .build();
             }
         } catch (Exception e) {

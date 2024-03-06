@@ -209,4 +209,32 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
             return false;
         }
     }
+
+    @Override
+    public List<User> searchUsersByKeyword(String keyword) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM user WHERE email LIKE ? OR fullName LIKE ?";
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, "%" + keyword + "%");
+            statement.setString(2, "%" + keyword + "%");
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    User user = new User();
+                    user.setId(resultSet.getInt("id"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setAdmin(resultSet.getBoolean("isAdmin"));
+                    user.setSubscribed(resultSet.getBoolean("isSubscribed"));
+                    user.setFullName(resultSet.getString("fullName"));
+                    user.setCreatedAt(resultSet.getTimestamp("createdAt"));
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle SQL exception
+        }
+        return users;
+    }
 }

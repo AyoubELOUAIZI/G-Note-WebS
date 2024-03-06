@@ -162,4 +162,24 @@ public class UserController {
                     .build();
         }
     }
+
+    @GET
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchUsers(@QueryParam("keyword") String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Keyword parameter is required")
+                    .build();
+        }
+
+        List<User> users = userService.searchUsersByKeyword(keyword);
+        if (!users.isEmpty()) {
+            return Response.ok(users).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("No users found for the given keyword")
+                    .build();
+        }
+    }
 }

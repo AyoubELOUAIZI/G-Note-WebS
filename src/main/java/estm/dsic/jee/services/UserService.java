@@ -24,4 +24,6 @@ public interface UserService {
 
     boolean updateUserById(User user);
 
+    List<User> searchUsersByKeyword(String keyword);
+
 }

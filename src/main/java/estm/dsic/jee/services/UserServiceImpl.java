@@ -69,4 +69,9 @@ public class UserServiceImpl implements UserService, Serializable {
         return userRepository.updateUserById(user);
     }
 
+    @Override
+    public List<User> searchUsersByKeyword(String keyword) {
+        return userRepository.searchUsersByKeyword(keyword);
+    }
+
 }

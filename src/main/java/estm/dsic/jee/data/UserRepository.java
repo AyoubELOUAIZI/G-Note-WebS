@@ -26,4 +26,6 @@ public interface UserRepository {
 
     boolean addUser(User user);
 
+    List<User> searchUsersByKeyword(String keyword);
+
 }
