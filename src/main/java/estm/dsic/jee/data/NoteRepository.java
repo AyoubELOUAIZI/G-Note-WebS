@@ -19,5 +19,7 @@ public interface NoteRepository {
 
     // Delete a note by its ID
     boolean delete(int id);
-}
 
+    // New method for searching notes by keyword
+    List<Note> searchNotesByKeyword(int userId,String keyword);
+}

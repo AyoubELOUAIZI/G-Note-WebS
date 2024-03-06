@@ -100,4 +100,33 @@ public class NoteController {
         }
     }
 
+    @GET
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchNotes(@QueryParam("keyword") String keyword, @QueryParam("userId") int userId) {
+        System.out.println("the key word is : "+keyword);
+        try {
+            if (keyword == null || keyword.isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Keyword parameter is required")
+                        .build();
+            }
+
+            List<Note> notes = noteService.searchNotesByKeyword(userId,keyword);
+            System.out.println("notes found"+notes);
+            if (!notes.isEmpty()) {
+                return Response.ok(notes).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("No notes found for the given keyword")
+                        .build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred while searching notes")
+                    .build();
+        }
+    }
+
 }

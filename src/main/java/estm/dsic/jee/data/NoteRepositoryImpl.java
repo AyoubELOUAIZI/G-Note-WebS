@@ -1,4 +1,5 @@
 package estm.dsic.jee.data;
+
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -71,7 +72,7 @@ public class NoteRepositoryImpl implements NoteRepository, Serializable {
     public boolean save(Note note) {
         String sql = "INSERT INTO note (ownerId, Subject, Body) VALUES (?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, note.getOwnerId());
             statement.setString(2, note.getSubject());
             statement.setString(3, note.getBody());
@@ -87,7 +88,7 @@ public class NoteRepositoryImpl implements NoteRepository, Serializable {
     public boolean update(Note note) {
         String sql = "UPDATE note SET Subject = ?, Body = ? WHERE idNote = ?";
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, note.getSubject());
             statement.setString(2, note.getBody());
             statement.setInt(3, note.getIdNote());
@@ -103,7 +104,7 @@ public class NoteRepositoryImpl implements NoteRepository, Serializable {
     public boolean delete(int id) {
         String sql = "DELETE FROM note WHERE idNote = ?";
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             int rowsDeleted = statement.executeUpdate();
             return rowsDeleted > 0;
@@ -112,4 +113,33 @@ public class NoteRepositoryImpl implements NoteRepository, Serializable {
             return false;
         }
     }
+
+    @Override
+    public List<Note> searchNotesByKeyword(int userId, String keyword) {
+        System.out.println("in the repository"+userId+"  "+keyword);
+        List<Note> notes = new ArrayList<>();
+        String sql = "SELECT * FROM note WHERE ownerId = ? AND (Subject LIKE ? OR Body LIKE ?)";
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.setString(2, "%" + keyword + "%");
+            statement.setString(3, "%" + keyword + "%");
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Note note = new Note();
+                    note.setIdNote(resultSet.getInt("idNote"));
+                    note.setOwnerId(resultSet.getInt("ownerId"));
+                    note.setSubject(resultSet.getString("Subject"));
+                    note.setBody(resultSet.getString("Body"));
+                    note.setCreatedAt(resultSet.getTimestamp("createdAt"));
+                    note.setUpdatedAt(resultSet.getTimestamp("updatedAt"));
+                    notes.add(note);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return notes;
+    }
+
 }

@@ -39,5 +39,9 @@ public class NoteServiceImpl implements NoteService, Serializable {
     public boolean delete(int id) {
         return noteRepository.delete(id);
     }
-}
 
+    @Override
+    public List<Note> searchNotesByKeyword(int userId,String keyword) {
+        return noteRepository.searchNotesByKeyword(userId,keyword);
+    }
+}
