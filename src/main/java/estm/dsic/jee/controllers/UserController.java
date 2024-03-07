@@ -123,11 +123,11 @@ public class UserController {
     @PUT
     @Path("/{userId}/subscribe")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response markUserAsSubscribed(@PathParam("userId") int userId,@CookieParam("g_note_jwt") String jwtToken) {
+    public Response markUserAsSubscribed(@PathParam("userId") int userId, @CookieParam("g_note_jwt") String jwtToken) {
 
         // Check if the user is having jwt and is admin
         Response adminResponse = JwtUtil.verifyisAdmin(jwtToken);
-        //the condition is updated
+        // the condition is updated
         if (adminResponse.getStatus() != Response.Status.OK.getStatusCode()) {
             // If the user is not an admin or there was an issue with authentication, return
             // the response
@@ -169,32 +169,35 @@ public class UserController {
 
     }
 
-    // @POST
-    // @Path("/logout")
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // public void logoutUser(User user) {
-    // // Implementation for user logout
-    // // maybe just remove the http only cokie and set the logout cokie in browser
-    // }
-    @POST
+    @GET
     @Path("/signout")
     public Response logoutUser() {
-        // Remove JWT cookie by setting its max age to 0
-        @SuppressWarnings("deprecation")
-        NewCookie cookie = new NewCookie("g_note_jwt", "", "/", null, null, 0, true, true);
+        System.out.println("A user has been requested to log out");
 
-        // Return an empty response with the expired cookie
-        return Response.ok().cookie(cookie).build();
+        String token = JWT.create()
+                .withIssuer("http://localhost:9080")
+                .withExpiresAt(new Date(System.currentTimeMillis()+2000))
+                .sign(Algorithm.HMAC256(SECRET_KEY));
+
+        // Create a HTTP-only cookie containing the JWT token
+        @SuppressWarnings("deprecation")
+        NewCookie cookie = new NewCookie("g_note_jwt", token, "/", null, null, 0, true, true);
+
+        System.out.println("\n\n\ncookie");
+        System.out.println(cookie);
+        // Authentication successful and user is subscribed
+        return Response.ok("removing the cookie").cookie(cookie)
+                .build();
     }
 
     // Inside UserController class
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllUsers( @CookieParam("g_note_jwt") String jwtToken) {
-       
+    public Response getAllUsers(@CookieParam("g_note_jwt") String jwtToken) {
+
         // Check if the user is having jwt and is admin
         Response adminResponse = JwtUtil.verifyisAdmin(jwtToken);
-        //the condition is updated
+        // the condition is updated
         if (adminResponse.getStatus() != Response.Status.OK.getStatusCode()) {
             // If the user is not an admin or there was an issue with authentication, return
             // the response
@@ -202,7 +205,7 @@ public class UserController {
             return adminResponse;
         }
 
-        //after checking the user is have jwt and an admin
+        // after checking the user is have jwt and an admin
         List<User> users = userService.getAllUsers();
         if (users != null && !users.isEmpty()) {
             return Response.ok(users).build();
@@ -240,11 +243,11 @@ public class UserController {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateUserById(User user,@CookieParam("g_note_jwt") String jwtToken) {
+    public Response updateUserById(User user, @CookieParam("g_note_jwt") String jwtToken) {
 
         // Check if the user is having jwt and is admin
         Response adminResponse = JwtUtil.verifyisAdmin(jwtToken);
-        //the condition is updated
+        // the condition is updated
         if (adminResponse.getStatus() != Response.Status.OK.getStatusCode()) {
             // If the user is not an admin or there was an issue with authentication, return
             // the response
@@ -270,14 +273,14 @@ public class UserController {
 
         // Check if the user is having jwt and is admin
         Response adminResponse = JwtUtil.verifyisAdmin(jwtToken);
-        //the condition is updated
+        // the condition is updated
         if (adminResponse.getStatus() != Response.Status.OK.getStatusCode()) {
             // If the user is not an admin or there was an issue with authentication, return
             // the response
             System.out.println("the user is not autherized or not admin");
             return adminResponse;
         }
-        
+
         boolean success = userService.registerUser(user);
         if (success) {
             return Response.ok(ResponseMessages.USER_ADDED_SUCCESSFULLY).build();
