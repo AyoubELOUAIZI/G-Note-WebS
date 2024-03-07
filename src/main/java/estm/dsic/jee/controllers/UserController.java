@@ -135,25 +135,48 @@ public class UserController {
 
     }
 
-    @POST
+    // @POST
+    // @Path("/signout")
+    // public Response logoutUser(@CookieParam("g_note_jwt") String jwtToken) {
+    // System.out.println("A user has been requested to log out");
+
+    // // jwtToken.maxAge
+    // String token = JWT.create()
+    // .withIssuer("http://localhost:9080")
+    // .withExpiresAt(new Date(System.currentTimeMillis()+2000))
+    // .sign(Algorithm.HMAC256(SECRET_KEY));
+
+    // // Create a HTTP-only cookie containing the JWT token
+    // @SuppressWarnings("deprecation")
+    // NewCookie cookie = new NewCookie("g_note_jwt", token, "/", null, null, 0,
+    // true, true);
+
+    // System.out.println("\n\n\ncookie");
+    // System.out.println(cookie);
+    // // Authentication successful and user is subscribed
+    // return Response.ok("removing the cookie").cookie(cookie)
+    // .build();
+    // }
+
+    @GET
     @Path("/signout")
-    public Response logoutUser() {
-        System.out.println("A user has been requested to log out");
+    public Response signoutUser(@CookieParam("g_note_jwt") String jwtToken) {
 
-        String token = JWT.create()
-                .withIssuer("http://localhost:9080")
-                .withExpiresAt(new Date(System.currentTimeMillis()+2000))
-                .sign(Algorithm.HMAC256(SECRET_KEY));
+        System.out.println("\n\n\nlogout api is called ...and the jwtToken is : " + jwtToken);
 
-        // Create a HTTP-only cookie containing the JWT token
-        @SuppressWarnings("deprecation")
-        NewCookie cookie = new NewCookie("g_note_jwt", token, "/", null, null, 0, true, true);
+        if (jwtToken != null && !jwtToken.isEmpty()) {
+            // Create a new cookie with the same name and path, but with maxAge=0 to
+            // immediately invalidate it
+            @SuppressWarnings("deprecation")
+            NewCookie expiredCookie = new NewCookie("g_note_jwt", "", "/", null, null, 0, true, true);
 
-        System.out.println("\n\n\ncookie");
-        System.out.println(cookie);
-        // Authentication successful and user is subscribed
-        return Response.ok("removing the cookie").cookie(cookie)
-                .build();
+            // Return the response with the expired cookie to remove it
+            return Response.ok("Removing the cookie").cookie(expiredCookie).build();
+        } else {
+            // If the sign-in cookie does not exist, simply return a response indicating
+            // successful sign-out
+            return Response.ok("No sign-in cookie found").build();
+        }
     }
 
     // Inside UserController class
@@ -261,17 +284,17 @@ public class UserController {
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchUsers(@QueryParam("keyword") String keyword, @CookieParam("g_note_jwt") String jwtToken) {
-       
-         // Check if the user is having jwt and is admin
-         Response adminResponse = JwtUtil.verifyisAdmin(jwtToken);
-         // the condition is updated
-         if (adminResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-             // If the user is not an admin or there was an issue with authentication, return
-             // the response
-             System.out.println("the user is not autherized or not admin");
-             return adminResponse;
-         }
-       
+
+        // Check if the user is having jwt and is admin
+        Response adminResponse = JwtUtil.verifyisAdmin(jwtToken);
+        // the condition is updated
+        if (adminResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+            // If the user is not an admin or there was an issue with authentication, return
+            // the response
+            System.out.println("the user is not autherized or not admin");
+            return adminResponse;
+        }
+
         if (keyword == null || keyword.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Keyword parameter is required")
