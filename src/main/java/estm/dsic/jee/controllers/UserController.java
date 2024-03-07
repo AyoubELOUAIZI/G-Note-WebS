@@ -86,32 +86,6 @@ public class UserController {
         }
     }
 
-    @PUT
-    @Path("/{userId}/subscribe")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response markUserAsSubscribed(@PathParam("userId") int userId, @CookieParam("g_note_jwt") String jwtToken) {
-
-        // Check if the user is having jwt and is admin
-        Response adminResponse = JwtUtil.verifyisAdmin(jwtToken);
-        // the condition is updated
-        if (adminResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-            // If the user is not an admin or there was an issue with authentication, return
-            // the response
-            System.out.println("the user is not autherized or not admin");
-            return adminResponse;
-        }
-
-        System.out.println("\n\n\nthe subscriber is called....");
-        boolean success = userService.markUserAsSubscribed(userId);
-        if (success) {
-            return Response.ok(ResponseMessages.USER_SUBSCRIBED).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(ResponseMessages.USER_NOT_SUBSCRIBED)
-                    .build();
-        }
-    }
-
     class SignInResponse {
         @JsonbProperty("user")
         private User user;
