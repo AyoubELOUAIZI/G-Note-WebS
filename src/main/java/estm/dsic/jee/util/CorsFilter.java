@@ -10,19 +10,36 @@ public class CorsFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}
 
+    // @Override
+    // public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    //     HttpServletResponse httpResponse = (HttpServletResponse) response;
+    //     // Allow requests from any origin
+    //     httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+    //     // Allow GET, POST, OPTIONS methods
+    //     httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST,PUT,DELETE, OPTIONS");
+    //     // Allow specific headers
+    //     httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
+    //     // Allow credentials
+    //     httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+    //     chain.doFilter(request, response);
+    // }
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        // Allow requests from any origin
-        httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+        // Get the origin of the incoming request
+        String origin = ((HttpServletRequest) request).getHeader("Origin");
+        // Set the Access-Control-Allow-Origin header to the origin of the request
+        httpResponse.setHeader("Access-Control-Allow-Origin", origin);
         // Allow GET, POST, OPTIONS methods
-        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST,PUT,DELETE, OPTIONS");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         // Allow specific headers
-        httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
         // Allow credentials
         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
         chain.doFilter(request, response);
     }
+
+
 
     @Override
     public void destroy() {}
