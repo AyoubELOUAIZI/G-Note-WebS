@@ -106,4 +106,51 @@ public class JwtUtil {
         }
     }
 
+    public static Response verifyisSubscribed(String jwtToken) {
+        try {
+            System.out.println("\n\n\n\njwtToken");
+            System.out.println(jwtToken);
+
+            // Validate JWT token
+            DecodedJWT decodedJWT = validateJWT(jwtToken);
+
+            System.out.println("decodedJWT");
+            System.out.println(decodedJWT);
+
+            if (decodedJWT == null) {
+                System.out.println("decodedJWT is null :" + decodedJWT);
+                // Return an unauthorized response if the token is invalid
+                return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity("Invalid JWT token or missing token g_note_jwt")
+                        .build();
+            }
+            System.out.println("now will check is subscribed................");
+
+            // Check if the 'isSubscribed' claim exists and is true
+            if (decodedJWT.getClaim("isSubscribed") != null) {
+                boolean isSubscribed = decodedJWT.getClaim("isSubscribed").asBoolean();
+                if (!isSubscribed) {
+                    // Return a forbidden response if the user is not an admin
+                    return Response.status(Response.Status.FORBIDDEN)
+                            .entity("You are not allowed to perform this action because you are not an subscribed/Verifyed yet.")
+                            .build();
+                }
+                // Return an OK response if the user is an admin
+                System.out.println("Ok response for subscription");
+                return Response.ok().build();
+            }
+            // Default to an unauthorized response if the claim doesn't exist or is not a
+            // boolean
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("Unauthorized")
+                    .build();
+        } catch (Exception e) {
+            // Handle any unexpected exceptions
+            e.printStackTrace(); // Log the exception for debugging purposes
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An unexpected error occurred when verifying the subscription")
+                    .build();
+        }
+    }
+
 }

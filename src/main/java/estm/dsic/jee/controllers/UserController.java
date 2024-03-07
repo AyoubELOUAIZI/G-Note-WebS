@@ -60,6 +60,7 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response signInUser(User user) {
+        System.out.println("\n\n\nthe function signin starta");
         // Authenticate the user
         User authenticatedUser = userService.authenticateUser(user.getEmail(), user.getPassword());
         if (authenticatedUser != null && authenticatedUser.isSubscribed()) {
@@ -169,7 +170,7 @@ public class UserController {
 
     }
 
-    @GET
+    @POST
     @Path("/signout")
     public Response logoutUser() {
         System.out.println("A user has been requested to log out");
