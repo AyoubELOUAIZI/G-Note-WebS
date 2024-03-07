@@ -16,13 +16,6 @@ public class NoteController {
     private NoteService noteService;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllNotes() {
-        List<Note> notes = noteService.getAllNotes();
-        return Response.ok(notes).build();
-    }
-
-    @GET
     @Path("/{id}") // this id is for the Owner id means the notes of a spicifique user
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNoteById(@PathParam("id") int id, @CookieParam("g_note_jwt") String jwtToken) {

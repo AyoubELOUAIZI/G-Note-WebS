@@ -21,29 +21,6 @@ public class NoteRepositoryImpl implements NoteRepository, Serializable {
     private DataSource dataSource;
 
     @Override
-    public List<Note> getAllNotes() {
-        List<Note> notes = new ArrayList<>();
-        String sql = "SELECT * FROM note";
-        try (Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);
-                ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                Note note = new Note();
-                note.setIdNote(resultSet.getInt("idNote"));
-                note.setOwnerId(resultSet.getInt("ownerId"));
-                note.setSubject(resultSet.getString("Subject"));
-                note.setBody(resultSet.getString("Body"));
-                note.setCreatedAt(resultSet.getTimestamp("createdAt"));
-                note.setUpdatedAt(resultSet.getTimestamp("updatedAt"));
-                notes.add(note);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return notes;
-    }
-
-    @Override
     public List<Note> getNotesByOwnerId(int ownerId) {
         List<Note> notes = new ArrayList<>();
         String sql = "SELECT * FROM note WHERE ownerId = ?";

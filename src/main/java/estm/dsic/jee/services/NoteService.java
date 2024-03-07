@@ -5,9 +5,6 @@ import estm.dsic.jee.models.Note;
 
 public interface NoteService {
 
-    // Retrieve all notes
-    List<Note> getAllNotes();
-
     // Retrieve all notes for a specific owner
     List<Note> getNotesByOwnerId(int ownerId);
 

@@ -16,11 +16,6 @@ public class NoteServiceImpl implements NoteService, Serializable {
     private NoteRepository noteRepository;
 
     @Override
-    public List<Note> getAllNotes() {
-        return noteRepository.getAllNotes();
-    }
-
-    @Override
     public List<Note> getNotesByOwnerId(int id) {
         return noteRepository.getNotesByOwnerId(id);
     }

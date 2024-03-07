@@ -5,9 +5,6 @@ import java.util.List;
 
 public interface NoteRepository {
 
-    // Retrieve all notes
-    List<Note> getAllNotes();
-
     // Retrieve all notes for a specific owner
     List<Note> getNotesByOwnerId(int ownerId);
 
