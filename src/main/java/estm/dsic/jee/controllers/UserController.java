@@ -14,8 +14,6 @@ import jakarta.ws.rs.core.Response;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import estm.dsic.jee.security.JwtUtil;
 
 import jakarta.ws.rs.core.NewCookie;
@@ -28,33 +26,6 @@ public class UserController {
     @Inject
     UserService userService;
 
-    // @POST
-    // @Path("/signin")
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // @Produces(MediaType.APPLICATION_JSON)
-    // public Response signInUser(User user) {
-    // System.out.println("\n\nthe function signInUser is called \n" + user);
-    // // Authenticate the user
-    // User authenticatedUser = userService.authenticateUser(user.getEmail(),
-    // user.getPassword());
-    // System.out.println("authenticatedUser");
-    // System.out.println(authenticatedUser);
-    // if (authenticatedUser != null && authenticatedUser.isSubscribed()) {
-    // // Authentication successful and user is subscribed
-    // return Response.ok(authenticatedUser).build();
-    // } else if (authenticatedUser != null && !authenticatedUser.isSubscribed()) {
-    // // User is not subscribed
-    // return Response.status(Response.Status.UNAUTHORIZED)
-    // .entity(ResponseMessages.ACCOUNT_NOT_VERIFIED)
-    // .build();
-    // } else {
-    // // Authentication failed
-    // return Response.status(Response.Status.UNAUTHORIZED)
-    // .entity(ResponseMessages.INCORRECT_CREDENTIALS)
-    // .build();
-    // }
-    // }
-
     @POST
     @Path("/signin")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -64,12 +35,6 @@ public class UserController {
         // Authenticate the user
         User authenticatedUser = userService.authenticateUser(user.getEmail(), user.getPassword());
         if (authenticatedUser != null && authenticatedUser.isSubscribed()) {
-            // Generate JWT token
-            // String token = JWT.create()
-            // .withIssuer("your-issuer")
-            // .withSubject(authenticatedUser.getEmail()) // Set email as subject
-            // .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-            // .sign(Algorithm.HMAC256(SECRET_KEY));
             String token = JWT.create()
                     .withIssuer("http://localhost:9080")
                     .withClaim("userId", authenticatedUser.getId()) // Assuming userId is the ID of the user
@@ -295,7 +260,18 @@ public class UserController {
     @GET
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchUsers(@QueryParam("keyword") String keyword) {
+    public Response searchUsers(@QueryParam("keyword") String keyword, @CookieParam("g_note_jwt") String jwtToken) {
+       
+         // Check if the user is having jwt and is admin
+         Response adminResponse = JwtUtil.verifyisAdmin(jwtToken);
+         // the condition is updated
+         if (adminResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+             // If the user is not an admin or there was an issue with authentication, return
+             // the response
+             System.out.println("the user is not autherized or not admin");
+             return adminResponse;
+         }
+       
         if (keyword == null || keyword.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Keyword parameter is required")
