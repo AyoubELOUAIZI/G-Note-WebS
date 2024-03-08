@@ -10,6 +10,7 @@ import java.util.List;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 
+import estm.dsic.jee.data.gen.Repository;
 import estm.dsic.jee.models.User;
 import jakarta.annotation.Resource;
 import jakarta.enterprise.context.SessionScoped;
@@ -17,14 +18,16 @@ import jakarta.inject.Named;
 
 @Named
 @SessionScoped
-public class UserRepositoryImpl implements UserRepository, Serializable {
+public class UserRepositoryImpl implements UserRepository, Serializable, Repository<User, Integer> {
 
     @Resource(lookup = "jdbc/g_note")
     private DataSource dataSource;
 
+    private static final String TABLE_NAME = "user";
+
     @Override
     public User findByEmailAndPassword(String email, String password) {
-        String sql = "SELECT * FROM user WHERE email = ? AND password = ?";
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE email = ? AND password = ?";
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
@@ -53,7 +56,7 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
     public boolean update(User user) {
         System.out.println("\n\n\nuser update" + user);
         // Implementation to update user information in the database
-        String sql = "UPDATE user SET isSubscribed = ? WHERE id = ?";
+        String sql = "UPDATE " + TABLE_NAME + " SET isSubscribed = ? WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, user.isSubscribed());
@@ -75,7 +78,7 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
     @Override
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM user";
+        String sql = "SELECT * FROM " + TABLE_NAME;
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -104,7 +107,7 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
 
     @Override
     public boolean deleteUserById(int userId) {
-        String sql = "DELETE FROM user WHERE id = ?";
+        String sql = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
@@ -119,7 +122,8 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
 
     @Override
     public boolean updateUserById(User user) {
-        String sql = "UPDATE user SET email = ?, password = ?, isAdmin = ?, isSubscribed = ?, fullName = ? WHERE id = ?";
+        String sql = "UPDATE " + TABLE_NAME
+                + " SET email = ?, password = ?, isAdmin = ?, isSubscribed = ?, fullName = ? WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getEmail());
@@ -139,7 +143,8 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
 
     @Override
     public boolean addUser(User user) {
-        String sql = "INSERT INTO user (email, password, isAdmin, isSubscribed, fullName) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + TABLE_NAME
+                + " (email, password, isAdmin, isSubscribed, fullName) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getEmail());
@@ -159,7 +164,7 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
     @Override
     public List<User> searchUsersByKeyword(String keyword) {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM user WHERE email LIKE ? OR fullName LIKE ?";
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE email LIKE ? OR fullName LIKE ?";
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, "%" + keyword + "%");
@@ -183,4 +188,104 @@ public class UserRepositoryImpl implements UserRepository, Serializable {
         }
         return users;
     }
+
+    // the interface methods override
+
+    @Override
+    public List<User> findAll() {
+        System.out.println("\nthe function findAll in Overrided in the UserRepository from Repository<User, Integer>");
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE_NAME;
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    User user = new User();
+                    user.setId(resultSet.getInt("id"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setAdmin(resultSet.getBoolean("isAdmin"));
+                    user.setSubscribed(resultSet.getBoolean("isSubscribed"));
+                    user.setFullName(resultSet.getString("fullName"));
+                    user.setCreatedAt(resultSet.getTimestamp("createdAt"));
+
+                    // Populate other user fields if needed
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any SQL exceptions (e.g., logging, throwing custom exception)
+        }
+        System.out.println("list of users");
+        System.out.println(users);
+        return users;
+    }
+
+    @Override
+    public boolean save(User entity) {
+        System.out.println("\nthe function save(User entity) in Overrided in the UserRepository from Repository<User, Integer>");
+        String sql = "INSERT INTO " + TABLE_NAME
+                + " (email, password, isAdmin, isSubscribed, fullName) VALUES (?, ?, ?, ?, ?)";
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, entity.getEmail());
+            statement.setString(2, entity.getPassword());
+            statement.setBoolean(3, entity.isAdmin());
+            statement.setBoolean(4, entity.isSubscribed());
+            statement.setString(5, entity.getFullName());
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any SQL exceptions (e.g., logging, throwing custom exception)
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteById(Integer id) {
+        System.out.println("\nthe function deleteById(Integer id) in Overrided in the UserRepository from Repository<User, Integer>");
+        String sql = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle any SQL exceptions (e.g., logging, throwing custom exception)
+            return false;
+        }
+    }
+
+    @Override
+    public List<User> searchByKeyword(String keyword) {
+        System.out.println("\nthe function searchByKeyword(String keyword) in Overrided in the UserRepository from Repository<User, String>");
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE email LIKE ? OR fullName LIKE ?";
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, "%" + keyword + "%");
+            statement.setString(2, "%" + keyword + "%");
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    User user = new User();
+                    user.setId(resultSet.getInt("id"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setAdmin(resultSet.getBoolean("isAdmin"));
+                    user.setSubscribed(resultSet.getBoolean("isSubscribed"));
+                    user.setFullName(resultSet.getString("fullName"));
+                    user.setCreatedAt(resultSet.getTimestamp("createdAt"));
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle SQL exception
+        }
+        return users;
+    }
+
 }

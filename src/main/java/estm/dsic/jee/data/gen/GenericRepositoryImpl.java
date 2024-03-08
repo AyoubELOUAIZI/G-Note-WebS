@@ -35,7 +35,7 @@ public abstract class GenericRepositoryImpl<T, I> implements GenericRepository<T
         return entities;
     }
 
-    @Override
+    @Override  
     public boolean save(T entity) {
         String query = "INSERT INTO " + getTableName() + " VALUES (?, ?, ?, ?)"; // Assuming the values to insert
         try (Connection connection = dataSource.getConnection();
@@ -72,7 +72,7 @@ public abstract class GenericRepositoryImpl<T, I> implements GenericRepository<T
     }
 
     @Override
-    public boolean deleteById(I id) {
+    public boolean deleteById(I id) {//I am starting with this most easy one
         String query = "DELETE FROM " + getTableName() + " WHERE id = ?"; // Assuming the delete query
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {

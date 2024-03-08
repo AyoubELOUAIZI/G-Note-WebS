@@ -9,7 +9,7 @@ public interface NoteRepository {
     List<Note> getNotesByOwnerId(int ownerId);
 
     // Save a new note
-    boolean save(Note note);
+    boolean saveNote(Note note);
 
     // Update an existing note
     boolean update(Note note);
