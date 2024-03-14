@@ -1,8 +1,20 @@
 package estm.dsic.jee.models;
 
-import java.sql.Timestamp;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
+import java.sql.Timestamp;
+import java.util.List;
+
+@Entity
+@Table(name = "user")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String email;
     private String password;
@@ -11,13 +23,16 @@ public class User {
     private String fullName;
     private Timestamp createdAt;
 
-    // Constructors
-    public User() {}
+    @OneToMany(mappedBy = "owner") // mappedBy indicates that the "owner" field in the Note class maps this relationship
+    private List<Note> notes;
 
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
+    // Constructors
+    // public User() {}
+
+    // public User(String email, String password) {
+    //     this.email = email;
+    //     this.password = password;
+    // }
 
     // Getters and setters
     public int getId() {
