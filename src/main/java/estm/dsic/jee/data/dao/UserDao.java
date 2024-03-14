@@ -1,11 +1,9 @@
 package estm.dsic.jee.data.dao;
 
 import jakarta.enterprise.context.SessionScoped;
-// import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-// import estm.dsic.jee.data.NoteRepository;
 import estm.dsic.jee.models.User;
 
 import java.io.Serializable;

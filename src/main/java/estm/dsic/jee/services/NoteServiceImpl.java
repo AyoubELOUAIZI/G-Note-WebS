@@ -18,15 +18,13 @@ public class NoteServiceImpl implements NoteService, Serializable {
 
     @Override
     public List<Note> getNotesByOwnerId(int id) {
-        // return noteRepository.getNotesByOwnerId(id);
-        return null;
+        return noteDao.getAllNotes();
     }
 
     @Override
     public boolean save(Note note) {
-        // return noteRepository.saveNote(note);
-        // return noteRepositoryImpl.save(note);
-        return false;
+      
+        return noteDao.createNote(note);
     }
 
     @Override

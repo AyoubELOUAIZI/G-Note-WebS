@@ -30,6 +30,7 @@ public class NoteController {
 
         List<Note> notes = noteService.getNotesByOwnerId(id);
         if (notes != null) {
+            System.out.println("\nthe fetched notes are: " + notes);
             return Response.ok(notes).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
