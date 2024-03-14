@@ -2,8 +2,8 @@ package estm.dsic.jee.services;
 
 import java.io.Serializable;
 import java.util.List;
-// import estm.dsic.jee.data.NoteRepository;
-// import estm.dsic.jee.data.NoteRepositoryImpl;
+
+import estm.dsic.jee.data.dao.NoteDao;
 import estm.dsic.jee.models.Note;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -13,11 +13,8 @@ import jakarta.inject.Named;
 @ApplicationScoped
 public class NoteServiceImpl implements NoteService, Serializable {
 
-    // @Inject
-    // private NoteRepository noteRepository;
-    
-    // @Inject
-    // private NoteRepositoryImpl noteRepositoryImpl;
+    @Inject
+    NoteDao noteDao;
 
     @Override
     public List<Note> getNotesByOwnerId(int id) {
@@ -27,7 +24,7 @@ public class NoteServiceImpl implements NoteService, Serializable {
 
     @Override
     public boolean save(Note note) {
-        //return noteRepository.saveNote(note);
+        // return noteRepository.saveNote(note);
         // return noteRepositoryImpl.save(note);
         return false;
     }
@@ -45,7 +42,7 @@ public class NoteServiceImpl implements NoteService, Serializable {
     }
 
     @Override
-    public List<Note> searchNotesByKeyword(int userId,String keyword) {
+    public List<Note> searchNotesByKeyword(int userId, String keyword) {
         // return noteRepository.searchNotesByKeyword(userId,keyword);
         return null;
     }

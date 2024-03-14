@@ -3,9 +3,7 @@ package estm.dsic.jee.services;
 import java.io.Serializable;
 import java.util.List;
 
-// import estm.dsic.jee.data.UserRepository;
 import estm.dsic.jee.data.dao.UserDao;
-// import estm.dsic.jee.data.UserRepositoryImpl;
 import estm.dsic.jee.models.User;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
@@ -14,12 +12,6 @@ import jakarta.inject.Named;
 @Named
 @SessionScoped
 public class UserServiceImpl implements UserService, Serializable {
-
-    // @Inject
-    // UserRepository userRepository;
-
-    // @Inject
-    // UserRepositoryImpl userRepositoryImpl;
 
     @Inject
     UserDao userDao;
